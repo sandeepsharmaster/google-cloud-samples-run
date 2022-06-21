@@ -11,8 +11,10 @@ app = Flask(__name__)
 
 @app.route("/process", methods=['GET'])
 def hello_world():
-    image_name = request.args
+    args = request.args
+    image_name = args.get("image", default="Microsoft.png", type=str)
     print(f"Image Name is {image_name}")
+    
     name = os.environ.get("NAME", "World")
     
     file_cont = download_blob(bucket_name="poc-input-bucket-sandy", source_blob_name=image_name)
