@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, request
 
 import sys
 from flask import escape
@@ -9,18 +9,21 @@ from google.cloud import storage
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/process", methods=['GET'])
 def hello_world():
+    image_name = request.args
+    print(f"Image Name is {image_name}")
     name = os.environ.get("NAME", "World")
-    file_cont = download_blob(bucket_name="poc-input-bucket-sandy", source_blob_name="Microsoft.png")
+    
+    file_cont = download_blob(bucket_name="poc-input-bucket-sandy", source_blob_name=image_name)
 
     try:
         print("Calling Image API ")
-        detect_logos_uri('gs://poc-input-bucket-sandy/' + str("Microsoft.png"))
+        detect_logos_uri('gs://poc-input-bucket-sandy/' + str(image_name))
     except:
         print("An exception occurred block 2")
 
-    upload_blob_from_memory("poc-output-bucket-sandy", file_cont, "Microsoft.png" + '_processed')
+    upload_blob_from_memory("poc-output-bucket-sandy", file_cont, image_name + '_processed')
     return "Hello {}!".format(name)
 
 
