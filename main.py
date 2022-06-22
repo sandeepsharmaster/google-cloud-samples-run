@@ -14,9 +14,9 @@ def hello_world():
     args = request.args
     image_name = args.get("image", default="Microsoft.png", type=str)
     print(f"Image Name is {image_name}")
-    
+
     name = os.environ.get("NAME", "World")
-    
+    print("Sandy")
     file_cont = download_blob(bucket_name="poc-input-bucket-sandy", source_blob_name=image_name)
 
     try:
